@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdOS | AI Crowd Intelligence Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <!-- HEADER -->
+        <header>
+            <h1>🚦 CrowdOS Live Dashboard</h1>
+        </header>
+
+        <!-- LOCATION SELECTOR -->
+        <div class="location-container premium-location">
+            <div class="location-header">
+                <div class="pulse-dot"></div>
+                <label for="user-location">📍 Select Your Location:</label>
+            </div>
+            <div class="select-wrapper premium-select-wrapper">
+                <select id="user-location" class="custom-select">
+                    <option value="Parking A" selected>Parking A</option>
+                    <option value="Parking B">Parking B</option>
+                    <option value="Food Court">Food Court</option>
+                    <option value="Road 1">Road 1</option>
+                </select>
+                <!-- Custom Arrow -->
+                <svg class="custom-arrow" width="14" height="10" viewBox="0 0 14 10" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L7 8L13 1" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- ALERT -->
+        <div id="alert-container"></div>
+
+        <!-- AI PANEL -->
+        <div class="decision-container ai-panel">
+            <div class="decision-header">
+                <span class="ai-icon-wrapper">
+                    <span class="ai-live-dot"></span>
+                    🤖
+                </span>
+                <span class="ai-title">AI Recommendation</span>
+            </div>
+
+            <div class="decision-body">
+                <div class="decision-main">
+                    <span class="decision-label">Recommended Route:</span>
+                    <span class="decision-badge" id="decision">Connecting...</span>
+                </div>
+
+                <div class="ai-reason-wrapper">
+                    <div class="shimmer-text ai-reason" id="ai-reason">Analyzing crowd dynamics...</div>
+                </div>
+
+                <div class="ai-metrics">
+                    <div class="confidence-bar-wrapper">
+                        <div class="confidence-header">
+                            <span>Confidence</span>
+                            <span class="confidence-value" id="confidence-val">89%</span>
+                        </div>
+                        <div class="confidence-track">
+                            <div class="confidence-fill" id="confidence-fill" style="width: 89%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-alert-box">
+                    <span class="alert-icon">⚠️</span>
+                    <div class="alert-text">
+                        <p class="prediction" id="prediction">Gate D may reach 70% load soon</p>
+                        <p class="proactive">AI is proactively redirecting crowd before congestion occurs.</p>
+                    </div>
+                </div>
+
+                <div class="ai-footer">
+                    <span class="source-tag" id="source">Source: Simulation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAP -->
+        <div class="map-container">
+            <h2>Stadium Floor Plan</h2>
+
+            <div class="map-wrapper">
+                <div class="stadium-container">
+
+                    <!-- CENTER CIRCLES -->
+                    <div class="circle"></div>
+                    <div class="inner-circle"></div>
+
+                    <!-- ROUTE LINE -->
+                    <div id="nav-route" class="route-line"></div>
+
+                    <!-- GATES (FIXED) -->
+
+                    <div id="map-gate-A" class="map-gate gate-wrapper gate-a">
+                        <div class="gate-label">Gate A</div>
+                        <svg class="gate-svg" viewBox="0 0 60 70">
+                            <!-- Base at y=70 (width 60), Top at y=0 (width 24, from 18 to 42) -->
+                            <polygon points="18,0 42,0 60,70 0,70" class="gate-poly"></polygon>
+                        </svg>
+                    </div>
+
+                    <div id="map-gate-B" class="map-gate gate-wrapper gate-b">
+                        <div class="gate-label">Gate B</div>
+                        <svg class="gate-svg" viewBox="0 0 70 60">
+                            <!-- Base at x=0 (height 60), Top at x=70 (height 24, from 18 to 42) -->
+                            <polygon points="0,0 70,18 70,42 0,60" class="gate-poly"></polygon>
+                        </svg>
+                    </div>
+
+                    <div id="map-gate-C" class="map-gate gate-wrapper gate-c">
+                        <div class="gate-label">Gate C</div>
+                        <svg class="gate-svg" viewBox="0 0 60 70">
+                            <!-- Base at y=0 (width 60), Top at y=70 (width 24, from 18 to 42) -->
+                            <polygon points="0,0 60,0 42,70 18,70" class="gate-poly"></polygon>
+                        </svg>
+                    </div>
+
+                    <div id="map-gate-D" class="map-gate gate-wrapper gate-d">
+                        <div class="gate-label">Gate D</div>
+                        <svg class="gate-svg" viewBox="0 0 70 60">
+                            <!-- Base at x=70 (height 60), Top at x=0 (height 24, from 18 to 42) -->
+                            <polygon points="0,18 70,0 70,60 0,42" class="gate-poly"></polygon>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-container">
+            <h2>📊 Live Crowd Trends</h2>
+            <div class="chart-wrapper">
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+
+        <div id="trigger-alert-box" class="trigger-alert" style="display: none;"></div>
+
+        <!-- GATES GRID -->
+        <div class="container" id="gates"></div>
+
+        <footer class="app-footer">
+            Made with ❤️ by neuralsingh
+        </footer>
+    </div>
+
+
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const locationSelect = document.getElementById("user-location");
+            locationSelect.addEventListener("change", (e) => {
+                userLocation = e.target.value;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
